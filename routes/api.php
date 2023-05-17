@@ -20,3 +20,4 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/search/recipes', [SpoonacularController::class, 'searchRecipes'])->name('searchRecipes');
 Route::get('/search/recipes/{id?}', [SpoonacularController::class, 'getRecipeInformation'])->name('getRecipeInformation');
+Route::post('/create/recipe', [SpoonacularController::class, 'createRecipeCard'])->name('createRecipeCard');
