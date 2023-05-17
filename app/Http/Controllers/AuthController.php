@@ -62,6 +62,17 @@ class AuthController extends Controller
 
         return response()->json(['token' => $jwt]);
     }
+
+    public function logout(Request $request){
+        
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
     // Route::get('/user/{id}', [UserController::class, 'show']);
 
     // Crear un cliente con una URI base
