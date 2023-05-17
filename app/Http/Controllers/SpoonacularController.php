@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SpoonacularController extends Controller
 {
@@ -31,6 +32,7 @@ class SpoonacularController extends Controller
             $data = json_decode($response->getBody(), true);
 
             return response()->json(['recipes ' => $data]);
+
         } catch (GuzzleException $e) {
 
             return response()->json(['error' => 'API request error']);
@@ -51,9 +53,33 @@ class SpoonacularController extends Controller
             $data = json_decode($response->getBody(), true);
 
             return response()->json(['recipe ' => $data]);
+
         } catch (GuzzleException $e) {
 
             return response()->json(['error' => 'API request error']);
+        }
+    }
+
+    public function searchRecipesByIngredients(Request $request)
+    {
+        $ingredients = $request->input('ingredients');
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        try {
+
+            $response = $this->client->get('https://api.spoonacular.com/recipes/findByIngredients', ['query' => ['apiKey' => $this->apiKey, 'ingredients' => $ingredients]]);
+            $data = json_decode($response->getBody(), true);
+
+            return response()->json(['recipes' => $data]);
+
+        } catch (GuzzleException $e) {
+
+            return response()->json(['error' => $e->getMessage()]);
+
         }
     }
 
@@ -65,6 +91,17 @@ class SpoonacularController extends Controller
 
         if (!$token) {
             return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'readyInMinutes' => 'required',
+            'image' => 'required | file',
+            'servings' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         try {

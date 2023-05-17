@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/search/recipes', [SpoonacularController::class, 'searchRecipes'])->name('searchRecipes');
+Route::get('/search/recipes/all', [SpoonacularController::class, 'searchRecipes'])->name('searchRecipes');
+Route::get('/search/recipes/findByIngredients', [SpoonacularController::class, 'searchRecipesByIngredients'])->name('searchRecipesByIngredients');
 Route::get('/search/recipes/{id?}', [SpoonacularController::class, 'getRecipeInformation'])->name('getRecipeInformation');
 Route::post('/create/recipe', [SpoonacularController::class, 'createRecipeCard'])->name('createRecipeCard');
