@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SpoonacularController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,8 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('/search/recipes', [SpoonacularController::class, 'searchRecipes'])->name('searchRecipes');
+Route::get('/search/recipes/{id?}', [SpoonacularController::class, 'getRecipeInformation'])->name('getRecipeInformation');
