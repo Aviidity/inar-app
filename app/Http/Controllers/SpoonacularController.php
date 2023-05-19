@@ -15,7 +15,7 @@ class SpoonacularController extends Controller
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = '0780e14ba21e45319bef57cfc85ab9cf';
+        $this->apiKey = env('SPOONACULAR_API_KEY');
     }
 
     public function searchRecipes(Request $request)
@@ -28,11 +28,14 @@ class SpoonacularController extends Controller
 
         try {
 
-            $response = $this->client->get('https://api.spoonacular.com/recipes/complexSearch', ['query' => ['apiKey' => $this->apiKey]]);
+            $response = $this->client->get('https://api.spoonacular.com/recipes/complexSearch', [
+                'headers' => [
+                    'x-api-key' => $this->apiKey,
+                ],
+            ]);
+
             $data = json_decode($response->getBody(), true);
-
             return response()->json(['recipes ' => $data]);
-
         } catch (GuzzleException $e) {
 
             return response()->json(['error' => 'API request error']);
@@ -49,11 +52,14 @@ class SpoonacularController extends Controller
 
         try {
 
-            $response = $this->client->get("https://api.spoonacular.com/recipes/{$id}/information", ['query' => ['apiKey' => $this->apiKey]]);
+            $response = $this->client->get("https://api.spoonacular.com/recipes/{$id}/information", [
+                'headers' => [
+                    'x-api-key' => $this->apiKey,
+                ],
+            ]);
+
             $data = json_decode($response->getBody(), true);
-
             return response()->json(['recipe ' => $data]);
-
         } catch (GuzzleException $e) {
 
             return response()->json(['error' => 'API request error']);
@@ -71,15 +77,20 @@ class SpoonacularController extends Controller
 
         try {
 
-            $response = $this->client->get('https://api.spoonacular.com/recipes/findByIngredients', ['query' => ['apiKey' => $this->apiKey, 'ingredients' => $ingredients]]);
+            $response = $this->client->get('https://api.spoonacular.com/recipes/findByIngredients', [
+                'headers' => [
+                    'x-api-key' => $this->apiKey,
+                ],
+                'query' => [
+                    'ingredients' => $ingredients
+                ]
+            ]);
+
             $data = json_decode($response->getBody(), true);
-
             return response()->json(['recipes' => $data]);
-
         } catch (GuzzleException $e) {
 
             return response()->json(['error' => $e->getMessage()]);
-
         }
     }
 
